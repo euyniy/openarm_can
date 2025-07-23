@@ -14,6 +14,7 @@
 
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
+#include <nanobind/stl/vector.h>
 
 // Include the C++ headers
 #include <linux/can.h>
