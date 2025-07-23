@@ -1,7 +1,8 @@
 # OpenArm CAN Library
 
 A C++ library for CAN communication with OpenArm robotic hardware, supporting Damiao motors over CAN/CAN-FD interfaces.
-This library is a part of [OpenArm SDK](https://github.com/enactic/openarm_sdk).
+This library is a part of [OpenArm](https://github.com/enactic/openarm/). See detailed setup guide and docs [here](https://docs.openarm.dev/software/can)
+
 
 ## Quick Start
 
@@ -39,10 +40,16 @@ sudo cmake --install build
 
 ```cpp
 #include <openarm/can/socket/openarm.hpp>
+#include <openarm/damiao_motor/dm_motor_constants.hpp>
 
 openarm::can::socket::OpenArm arm("can0", true);  // CAN-FD enabled
-arm.init_arm_motors({MotorType::DM4310}, {0x01}, {0x11});
-arm.enable_all();
+std::vector<openarm::damiao_motor::MotorType> motor_types = {
+    openarm::damiao_motor::MotorType::DM4310, openarm::damiao_motor::MotorType::DM4310};
+std::vector<uint32_t> send_can_ids = {0x01, 0x02};
+std::vector<uint32_t> recv_can_ids = {0x11, 0x12};
+
+openarm.init_arm_motors(motor_types, send_can_ids, recv_can_ids);
+openarm.enable_all();
 ```
 
 ### 3. Python (🚧 EXPERIMENTAL - TEMPORARY 🚧)
