@@ -41,6 +41,12 @@ void DMDeviceCollection::disable_all() {
     }
 }
 
+void DMDeviceCollection::set_zero(int i) {
+    auto dm_device = get_dm_devices().at(i);
+    auto zero_packet = CanPacketEncoder::create_set_zero_command(dm_device->get_motor());
+    send_command_to_device(dm_device, zero_packet);
+}
+
 void DMDeviceCollection::set_zero_all() {
     for (auto dm_device : get_dm_devices()) {
         CANPacket zero_packet = CanPacketEncoder::create_set_zero_command(dm_device->get_motor());
@@ -113,6 +119,8 @@ std::vector<Motor> DMDeviceCollection::get_motors() const {
     }
     return motors;
 }
+
+Motor DMDeviceCollection::get_motor(int i) const { return get_dm_devices().at(i)->get_motor(); }
 
 std::vector<std::shared_ptr<DMCANDevice>> DMDeviceCollection::get_dm_devices() const {
     std::vector<std::shared_ptr<DMCANDevice>> dm_devices;
