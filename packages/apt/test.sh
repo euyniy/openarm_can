@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Copyright 2025 Enactic, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/.vscode
-/build
-/openarm-can-*.tar.gz
-/packages/apt/build.sh
-/packages/apt/build/
-/packages/apt/env.sh
-/packages/apt/repositories/
-/packages/apt/tmp/
-/packages/openarm-can-*.tar.gz
-/packages/yum/build.sh
-/packages/yum/build/
-/packages/yum/env.sh
-/packages/yum/repositories/
-/packages/yum/tmp/
+set -exu
+
+apt update
+apt install -V -y curl lsb-release
+
+distribution=$(lsb_release --short --id | tr '[:upper:]' '[:lower:]')
+code_name=$(lsb_release --codename --short)
+architecture=$(dpkg --print-architecture)
+
+repositories_dir=/host/packages/apt/repositories
+apt install -V -y \
+    "${repositories_dir}"/"${distribution}"/pool/"${code_name}"/*/*/*/*_"${architecture}".deb

@@ -12,17 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/.vscode
-/build
-/openarm-can-*.tar.gz
-/packages/apt/build.sh
-/packages/apt/build/
-/packages/apt/env.sh
-/packages/apt/repositories/
-/packages/apt/tmp/
-/packages/openarm-can-*.tar.gz
-/packages/yum/build.sh
-/packages/yum/build/
-/packages/yum/env.sh
-/packages/yum/repositories/
-/packages/yum/tmp/
+FROM ubuntu:noble
+
+RUN \
+  echo "debconf debconf/frontend select Noninteractive" | \
+    debconf-set-selections
+
+ARG DEBUG
+
+RUN \
+  quiet=$([ "${DEBUG}" = "yes" ] || echo "-qq") && \
+  apt update ${quiet} && \
+  apt install -y -V ${quiet} \
+    build-essential \
+    ccache \
+    cmake \
+    debhelper \
+    devscripts \
+    ninja-build && \
+  apt clean

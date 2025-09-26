@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/.vscode
-/build
-/openarm-can-*.tar.gz
-/packages/apt/build.sh
-/packages/apt/build/
-/packages/apt/env.sh
-/packages/apt/repositories/
-/packages/apt/tmp/
-/packages/openarm-can-*.tar.gz
-/packages/yum/build.sh
-/packages/yum/build/
-/packages/yum/env.sh
-/packages/yum/repositories/
-/packages/yum/tmp/
+require_relative "helper"
+
+version = ENV["VERSION"] || Helper.detect_version
+
+archive_base_name = "openarm-can-#{version}"
+archive_tar_gz = "#{archive_base_name}.tar.gz"
+file archive_tar_gz do
+  sh("git", "archive", "HEAD",
+     "--prefix", "#{archive_base_name}/",
+     "--output", archive_tar_gz)
+end
+
+desc "Create #{archive_tar_gz}"
+task :dist => archive_tar_gz

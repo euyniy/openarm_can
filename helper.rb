@@ -12,17 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-/.vscode
-/build
-/openarm-can-*.tar.gz
-/packages/apt/build.sh
-/packages/apt/build/
-/packages/apt/env.sh
-/packages/apt/repositories/
-/packages/apt/tmp/
-/packages/openarm-can-*.tar.gz
-/packages/yum/build.sh
-/packages/yum/build/
-/packages/yum/env.sh
-/packages/yum/repositories/
-/packages/yum/tmp/
+module Helper
+  module_function
+  def detect_version
+    cmakelists = File.join(__dir__, "CMakeLists.txt")
+    File.read(cmakelists)[/^project\(.+ VERSION (.+?)\)/, 1]
+  end
+end
