@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require "date"
+
 require_relative "helper"
 
 version = ENV["VERSION"] || Helper.detect_version
@@ -26,3 +28,51 @@ end
 
 desc "Create #{archive_tar_gz}"
 task :dist => archive_tar_gz
+
+namespace :release do
+  namespace :version do
+    desc "Update versions for a new release"
+    task :update do
+      new_version = ENV["NEW_VERSION"]
+      if new_version.nil?
+        raise "You must specify NEW_VERSION=..."
+      end
+      new_release_date = ENV["NEW_RELEASE_DATE"] || Date.today.iso8601
+      Helper.update_cmake_lists_txt_version(new_version)
+      Helper.update_content("python/meson.build") do |content|
+        content.sub(/^(    version: ').*?('.*)$/) do
+          "#{$1}#{new_version}#{$2}"
+        end
+      end
+      Helper.update_content("python/pyproject.toml") do |content|
+        content.sub(/^(version = ").*?(")$/) do
+          "#{$1}#{new_version}#{$2}"
+        end
+      end
+      Helper.update_content("python/openarm/can/__init__.py") do |content|
+        content.sub(/^(__version__ = ").*?(")$/) do
+          "#{$1}#{new_version}#{$2}"
+        end
+      end
+      ruby("-C",
+           "packages",
+           "-S",
+           "rake",
+           "version:update",
+           "RELEASE_DATE=#{new_release_date}")
+      sh("git",
+         "add",
+         "CMakeLists.txt",
+         "packages/debian/changelog",
+         "packages/fedora/openarm-can.spec",
+         "python/meson.build",
+         "python/pyproject.toml",
+         "python/openarm/can/__init__.py")
+      sh("git",
+         "commit",
+         "-m",
+         "Update version info to #{version} (#{new_release_date})")
+      sh("git", "push")
+    end
+  end
+end
