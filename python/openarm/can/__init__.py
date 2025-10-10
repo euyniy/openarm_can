@@ -22,7 +22,7 @@ allowing you to control DAMIAO motors through SocketCAN.
 # Import all C++ bindings directly - 1:1 mapping with C++ API
 from .core import *
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "Enactic, Inc."
 
 # Direct export of C++ classes - no wrappers
