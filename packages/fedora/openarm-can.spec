@@ -36,6 +36,12 @@ Requires:  %{name}%{?_isa} = %{version}-%{release}
 %description devel
 Header files and development libraries for OpenARM CAN control library.
 
+%package utils
+Summary: Setup and configuration utility scripts
+
+%description utils
+Setup and configuration utility scripts.
+
 %prep
 %autosetup
 
@@ -59,6 +65,10 @@ Header files and development libraries for OpenARM CAN control library.
 %{_libdir}/cmake/OpenArmCAN/
 %{_libdir}/libopenarm_can.so
 %{_libdir}/pkgconfig/openarm-can.pc
+
+%files utils
+%license LICENSE.txt
+%{_libexecdir}/openarm-can/
 
 %changelog
 %autochangelog
