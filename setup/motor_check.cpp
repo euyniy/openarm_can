@@ -182,12 +182,6 @@ int main(int argc, char* argv[]) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         openarm.recv_all();
 
-        // Print final status
-        if (!motors.empty()) {
-            std::cout << "\n=== Final Motor Status ===" << std::endl;
-            print_motor_status(motors[0]);
-        }
-
         std::cout << "\n=== Script Completed Successfully ===" << std::endl;
 
     } catch (const std::exception& e) {
